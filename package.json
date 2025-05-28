@@ -1,0 +1,15 @@
+{
+  "name": "minyan-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cd frontend && npm start",
+    "build": "cd frontend && npm run build",
+    "dev": "cd frontend && npm run dev",
+    "firebase": "cd backend && firebase emulators:start"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}

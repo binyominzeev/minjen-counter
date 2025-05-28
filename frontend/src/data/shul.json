@@ -1,0 +1,18 @@
+{
+  "name": "Main Shul",
+  "forms": [
+    {
+      "name": "Weekday Davening",
+      "minyanim": [
+        {
+          "id": "tuesday",
+          "label": "Tuesday Morning"
+        },
+        {
+          "id": "wednesday",
+          "label": "Wednesday Morning"
+        }
+      ]
+    }
+  ]
+}
