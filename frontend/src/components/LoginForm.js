@@ -36,15 +36,20 @@ export default function LoginForm({ onLogin }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 320, margin: "2rem auto" }}>
-      <h2>{isRegister ? "Register" : "Login"}</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-xs mx-auto bg-white rounded-lg shadow p-6 space-y-4"
+    >
+      <h2 className="text-xl font-semibold text-center text-blue-700 mb-2">
+        {isRegister ? "Register" : "Login"}
+      </h2>
       <input
         type="email"
         placeholder="Email"
         value={email}
         onChange={e => setEmail(e.target.value)}
         required
-        style={{ display: "block", width: "100%", marginBottom: 8 }}
+        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
       <input
         type="password"
@@ -52,20 +57,31 @@ export default function LoginForm({ onLogin }) {
         value={password}
         onChange={e => setPassword(e.target.value)}
         required
-        style={{ display: "block", width: "100%", marginBottom: 8 }}
+        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
-      <button type="submit" style={{ width: "100%" }}>
+      <button
+        type="submit"
+        className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
         {isRegister ? "Register" : "Login"}
       </button>
-      <button type="button" onClick={handleGoogleLogin} style={{ width: "100%", marginTop: 8 }}>
+      <button
+        type="button"
+        onClick={handleGoogleLogin}
+        className="w-full py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+      >
         Sign in with Google
       </button>
-      <div style={{ marginTop: 8 }}>
-        <button type="button" onClick={() => setIsRegister(!isRegister)} style={{ width: "100%" }}>
+      <div>
+        <button
+          type="button"
+          onClick={() => setIsRegister(!isRegister)}
+          className="w-full text-blue-600 hover:underline mt-2"
+        >
           {isRegister ? "Already have an account? Login" : "No account? Register"}
         </button>
       </div>
-      {error && <div style={{ color: "red", marginTop: 8 }}>{error}</div>}
+      {error && <div className="text-red-600 text-center">{error}</div>}
     </form>
   );
 }

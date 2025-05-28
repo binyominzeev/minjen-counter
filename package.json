@@ -11,5 +11,8 @@
   "workspaces": [
     "frontend",
     "backend"
-  ]
+  ],
+  "dependencies": {
+    "bootstrap": "^5.3.6"
+  }
 }
