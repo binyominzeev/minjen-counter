@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import shulData from "../data/shul.json";
+import { API_URL } from "../config";
 
-const API_URL = "http://localhost:5000/api";
 const ADMIN_EMAIL = "szvbinjomin@gmail.com"; // Set your admin email here
 
 export default function ShulProfile({ user }) {
