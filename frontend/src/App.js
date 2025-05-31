@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PagesAdmin from "../components/PagesAdmin";
-import ShulProfile from "../components/ShulProfile";
-import LoginForm from "../components/LoginForm";
-import { auth } from "../firebase";
+import PagesAdmin from "./components/PagesAdmin";
+import ShulProfile from "./components/ShulProfile";
+import LoginForm from "./components/LoginForm";
+import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 const ADMIN_EMAIL = "szvbinjomin@gmail.com";

@@ -1,0 +1,50 @@
+{
+  "pages": [
+    {
+      "id": "weekday-davening",
+      "name": "Weekday Davening",
+      "minyanim": [
+        {
+          "id": "tuesday",
+          "label": "Tuesday Morning"
+        },
+        {
+          "id": "wednesday",
+          "label": "Wednesday Morning"
+        }
+      ]
+    },
+    {
+      "id": "shabbos",
+      "name": "Shabbos",
+      "minyanim": [
+        {
+          "id": "june-2",
+          "label": "June 2"
+        },
+        {
+          "id": "june-8",
+          "label": "June 8"
+        }
+      ]
+    }
+  ],
+  "participants": {
+    "tuesday": [
+      {
+        "uid": "manual-Valaki Keddi",
+        "email": "Valaki Keddi"
+      }
+    ],
+    "wednesday": [
+      {
+        "uid": "manual-Valaki Szerdai",
+        "email": "Valaki Szerdai"
+      },
+      {
+        "uid": "f6NlbkwpamTSPeKi4FV6OCsLkFk2",
+        "email": "szvbinjomin@gmail.com"
+      }
+    ]
+  }
+}
