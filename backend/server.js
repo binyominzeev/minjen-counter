@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const https = require('https');
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const app = express();
@@ -9,6 +10,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const DATA_FILE = "./data.json"; // Now stores pages and participants
+
+
+const options = {
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert')
+};
 
 function readData() {
   if (!fs.existsSync(DATA_FILE)) return { pages: [], participants: {} };
@@ -102,4 +109,7 @@ app.post("/api/unregister", (req, res) => {
   res.json({ success: true, participants: data.participants[minyanId] });
 });
 
-app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+//app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+https.createServer(options, app).listen(5000, () => {
+  console.log('HTTPS server running on https://localhost:5000');
+});
