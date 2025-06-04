@@ -12,11 +12,6 @@ app.use(bodyParser.json());
 const DATA_FILE = "./data.json"; // Now stores pages and participants
 
 
-const options = {
-  key: fs.readFileSync('server.key'),
-  cert: fs.readFileSync('server.cert')
-};
-
 function readData() {
   if (!fs.existsSync(DATA_FILE)) return { pages: [], participants: {} };
   return JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
@@ -162,7 +157,7 @@ function getDisplayName(data, user) {
   return (data.userProfiles && data.userProfiles[user.uid]) || user.email;
 }
 
-//app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
-https.createServer(options, app).listen(5000, () => {
-  console.log('HTTPS server running on https://localhost:5000');
-});
+app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+// https.createServer(options, app).listen(5000, () => {
+//   console.log('HTTPS server running on https://localhost:5000');
+/// });
