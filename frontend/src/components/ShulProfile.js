@@ -118,7 +118,7 @@ export default function ShulProfile({ user, displayName, loading }) {
                       : "bg-blue-600 text-white hover:bg-blue-700"
                   }`}
                 >
-                  {isRegistered ? "Unregister" : "Register"}
+                  {isRegistered ? "Kijelentkezés" : "Jelentkezés"}
                 </button>
               )}
               {/* Admin manual add */}
@@ -148,17 +148,22 @@ export default function ShulProfile({ user, displayName, loading }) {
                 </form>
               )}
               <div className="w-full">
-                <h5 className="text-sm font-semibold text-gray-600 mb-2">Participants:</h5>
+                <h5 className="text-sm font-semibold text-gray-600 mb-2">
+                  Regisztráltak:
+                </h5>
                 <ul className="space-y-1">
                   {minyanParticipants.length === 0 ? (
                     <li className="text-gray-400 italic">No one registered yet</li>
                   ) : (
-                    minyanParticipants.map(u => (
+                    minyanParticipants.map((u, idx) => (
                       <li
                         key={u.uid}
                         className="px-2 py-1 bg-blue-50 rounded text-blue-800 text-sm flex items-center justify-between"
                       >
-                        <span>{u.displayName || u.email}</span>
+                        <span>
+                          <span className="font-bold mr-2">{idx + 1}.</span>
+                          {u.displayName || u.email}
+                        </span>
                         {isAdmin && (
                           <button
                             onClick={() => handleAdminUnregister(minyan.id, u)}

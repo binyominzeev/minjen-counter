@@ -50,7 +50,7 @@ export default function LoginForm({ onLogin }) {
       className="max-w-xs mx-auto bg-white rounded-lg shadow p-6 space-y-4"
     >
       <h2 className="text-xl font-semibold text-center text-blue-700 mb-2">
-        {isRegister ? "Register" : "Login"}
+        {isRegister ? "Regisztráció" : "Bejelentkezés"}
       </h2>
       <input
         type="email"
@@ -62,7 +62,7 @@ export default function LoginForm({ onLogin }) {
       />
       <input
         type="password"
-        placeholder="Password"
+        placeholder="Jelszó "
         value={password}
         onChange={e => setPassword(e.target.value)}
         required
@@ -72,14 +72,14 @@ export default function LoginForm({ onLogin }) {
         type="submit"
         className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
       >
-        {isRegister ? "Register" : "Login"}
+        {isRegister ? "Regisztráció" : "Bejelentkezés"}
       </button>
       <button
         type="button"
         onClick={handleGoogleLogin}
         className="w-full py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
       >
-        Sign in with Google
+        Google belépés
       </button>
       <div>
         <button
@@ -87,7 +87,7 @@ export default function LoginForm({ onLogin }) {
           onClick={() => setIsRegister(!isRegister)}
           className="w-full text-blue-600 hover:underline mt-2"
         >
-          {isRegister ? "Already have an account? Login" : "No account? Register"}
+          {isRegister ? "Már regisztráltál? Belépés" : "Még nem vagy regisztrálva? Regisztráció"}
         </button>
       </div>
       {error && <div className="text-red-600 text-center">{error}</div>}
