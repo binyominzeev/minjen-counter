@@ -1,30 +1,30 @@
 {
   "pages": [
     {
-      "id": "weekday-davening",
-      "name": "Weekday Davening",
+      "id": "hetkoznapi-imak",
+      "name": "Hétköznapi imák",
       "minyanim": [
         {
-          "id": "tuesday",
-          "label": "Tuesday Morning"
+          "id": "kedd-reggel-7:30",
+          "label": "Kedd reggel 7:30"
         },
         {
-          "id": "wednesday",
-          "label": "Wednesday Morning"
+          "id": "szerda-reggel-7:30",
+          "label": "Szerda reggel 7:30"
         }
       ]
     },
     {
-      "id": "shabbos",
-      "name": "Shabbos",
+      "id": "szombat-reggeli-imak",
+      "name": "Szombat reggeli imák",
       "minyanim": [
         {
-          "id": "june-2",
-          "label": "June 2"
+          "id": "június-7.-nászo",
+          "label": "Június 7. Nászo"
         },
         {
-          "id": "june-8",
-          "label": "June 8"
+          "id": "június-21.-slách",
+          "label": "Június 21. Slách"
         }
       ]
     }
@@ -40,11 +40,68 @@
       {
         "uid": "manual-Valaki Szerdai",
         "email": "Valaki Szerdai"
-      },
+      }
+    ],
+    "june-2": [],
+    "june-8": [],
+    "június-7.-nászo": [
       {
         "uid": "f6NlbkwpamTSPeKi4FV6OCsLkFk2",
-        "email": "szvbinjomin@gmail.com"
+        "email": "szvbinjomin@gmail.com",
+        "displayName": "Binjomin"
+      },
+      {
+        "uid": "manual-Quittner Zoltán",
+        "email": "Quittner Zoltán",
+        "displayName": "Quittner Zoltán"
+      },
+      {
+        "uid": "manual-Tesztfelhasználó",
+        "email": "Tesztfelhasználó",
+        "displayName": "Tesztfelhasználó"
+      }
+    ],
+    "június-21.-slách": [
+      {
+        "uid": "f6NlbkwpamTSPeKi4FV6OCsLkFk2",
+        "email": "szvbinjomin@gmail.com",
+        "displayName": "Binjomin"
+      },
+      {
+        "uid": "manual-Quittner Zoltán",
+        "email": "Quittner Zoltán",
+        "displayName": "Quittner Zoltán"
+      },
+      {
+        "uid": "ygDYgS5BXYdQQolQYezqSQlnQok1",
+        "email": "test@example.com",
+        "displayName": "Tesztfelhasználó"
+      }
+    ],
+    "teszt-1": [
+      {
+        "uid": "f6NlbkwpamTSPeKi4FV6OCsLkFk2",
+        "email": "szvbinjomin@gmail.com",
+        "displayName": "Binjomin"
+      }
+    ],
+    "kedd-reggel-7:30": [
+      {
+        "uid": "f6NlbkwpamTSPeKi4FV6OCsLkFk2",
+        "email": "szvbinjomin@gmail.com",
+        "displayName": "Binjomin"
+      }
+    ],
+    "szerda-reggel-7:30": [
+      {
+        "uid": "f6NlbkwpamTSPeKi4FV6OCsLkFk2",
+        "email": "szvbinjomin@gmail.com",
+        "displayName": "Binjomin"
       }
     ]
+  },
+  "userProfiles": {
+    "f6NlbkwpamTSPeKi4FV6OCsLkFk2": "Binjomin",
+    "ygDYgS5BXYdQQolQYezqSQlnQok1": "Tesztfelhasználó"
   }
 }

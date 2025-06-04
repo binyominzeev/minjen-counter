@@ -25,11 +25,23 @@ function writeData(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
+// Utility to remove accents/diacritics and replace spaces with hyphens
+function slugify(str) {
+  return str
+    .normalize("NFD") // split accented letters into base + diacritic
+    .replace(/[\u0300-\u036f]/g, "") // remove diacritics
+    .toLowerCase()
+    .replace(/\s+/g, "-") // spaces to hyphens
+    .replace(/[^a-z0-9\-]/g, "") // remove non-alphanumeric except hyphen
+    .replace(/\-+/g, "-") // collapse multiple hyphens
+    .replace(/^-+|-+$/g, ""); // trim hyphens
+}
+
 // Create a new page
 app.post("/api/pages", (req, res) => {
   const { name } = req.body;
   if (!name) return res.status(400).json({ error: "Missing name" });
-  const id = name.toLowerCase().replace(/\s+/g, "-");
+  const id = slugify(name);
   const data = readData();
   if (data.pages.some(p => p.id === id)) return res.status(400).json({ error: "Page exists" });
   data.pages.push({ id, name, minyanim: [] });
@@ -90,8 +102,17 @@ app.post("/api/register", (req, res) => {
   const data = readData();
   data.participants = data.participants || {};
   data.participants[minyanId] = data.participants[minyanId] || [];
+
+  // Use displayName if available, otherwise fallback to email
+  const displayName = getDisplayName(data, user);
+
+  // Check if user is already registered
   if (!data.participants[minyanId].some(u => u.uid === user.uid)) {
-    data.participants[minyanId].push(user);
+    // Save user with displayName
+    data.participants[minyanId].push({
+      ...user,
+      displayName
+    });
     writeData(data);
   }
   res.json({ success: true, participants: data.participants[minyanId] });
@@ -108,6 +129,38 @@ app.post("/api/unregister", (req, res) => {
   writeData(data);
   res.json({ success: true, participants: data.participants[minyanId] });
 });
+
+app.get("/api/pages/:id", (req, res) => {
+  const { id } = req.params;
+  const data = readData();
+  const page = data.pages.find(p => p.id === id);
+  if (!page) return res.status(404).json({ error: "Page not found" });
+  res.json({ page });
+});
+
+// Add this endpoint:
+app.post("/api/profile", (req, res) => {
+  const { uid, displayName } = req.body;
+  if (!uid || !displayName) return res.status(400).json({ error: "Missing uid or displayName" });
+  const data = readData();
+  data.userProfiles = data.userProfiles || {};
+  data.userProfiles[uid] = displayName;
+  writeData(data);
+  res.json({ success: true });
+});
+
+// New endpoint to get user profile
+app.get("/api/profile/:uid", (req, res) => {
+  const { uid } = req.params;
+  const data = readData();
+  const displayName = (data.userProfiles && data.userProfiles[uid]) || "";
+  res.json({ displayName });
+});
+
+// Update registration to use displayName if available:
+function getDisplayName(data, user) {
+  return (data.userProfiles && data.userProfiles[user.uid]) || user.email;
+}
 
 //app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
 https.createServer(options, app).listen(5000, () => {
