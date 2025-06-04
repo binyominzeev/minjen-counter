@@ -14,7 +14,8 @@ const ADMIN_EMAIL = "szvbinjomin@gmail.com";
 function App() {
   console.log("App component rendered");
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined); // undefined means "not checked yet"
+  const [loading, setLoading] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
   const [displayName, setDisplayName] = useState("");
 
@@ -35,6 +36,7 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
+      setLoading(false);
       fetchDisplayName(u);
       console.log("Logged in user:", u);
     });
@@ -50,6 +52,10 @@ function App() {
     setShowProfile(false);
     if (updated && user) fetchDisplayName(user);
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // or a spinner, or whatever you prefer
+  }
 
   return (
     <Router>
@@ -83,7 +89,7 @@ function App() {
             )
           }
         />
-        <Route path="/:pageId" element={<ShulProfile user={user} displayName={displayName} />} />
+        <Route path="/:pageId" element={<ShulProfile user={user} displayName={displayName} loading={loading} />} />
         <Route
           path="/login"
           element={

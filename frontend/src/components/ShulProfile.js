@@ -6,7 +6,7 @@ import LoginForm from "./LoginForm";
 
 const ADMIN_EMAIL = "szvbinjomin@gmail.com"; // Set your admin email here
 
-export default function ShulProfile({ user, displayName }) {
+export default function ShulProfile({ user, displayName, loading }) {
   const { pageId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -77,8 +77,11 @@ export default function ShulProfile({ user, displayName }) {
     setParticipants(res.data);
   };
 
+  if (loading) {
+    return <div className="mt-8 text-center text-gray-500">Loading...</div>;
+  }
+
   if (!user) {
-    // Show only the login form, pass redirect info if needed
     return (
       <div className="mt-8 flex justify-center">
         <LoginForm />
@@ -92,7 +95,9 @@ export default function ShulProfile({ user, displayName }) {
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-blue-800 mb-4">{page.name}</h2>
+      <h2 className="text-3xl font-extrabold text-blue-800 mb-8 text-center drop-shadow">
+        {page.name}
+      </h2>
       <div className="flex flex-row flex-wrap gap-8 justify-center">
         {page.minyanim.map(minyan => {
           const minyanParticipants = participants[minyan.id] || [];
