@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function LoginForm({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState("");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const params = new URLSearchParams(location.search);
+  const redirect = params.get("redirect") || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +26,7 @@ export default function LoginForm({ onLogin }) {
         userCredential = await signInWithEmailAndPassword(auth, email, password);
       }
       onLogin && onLogin(userCredential.user);
+      navigate(redirect);
     } catch (err) {
       setError(err.message);
     }
@@ -30,6 +38,7 @@ export default function LoginForm({ onLogin }) {
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
       onLogin && onLogin(userCredential.user);
+      navigate(redirect);
     } catch (err) {
       setError(err.message);
     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import PagesAdmin from "../components/PagesAdmin";
 import ShulProfile from "../components/ShulProfile";
 import LoginForm from "../components/LoginForm";
@@ -84,6 +84,14 @@ function App() {
           }
         />
         <Route path="/:pageId" element={<ShulProfile user={user} displayName={displayName} />} />
+        <Route
+          path="/login"
+          element={
+            <LoginForm
+              onLogin={setUser}
+            />
+          }
+        />
         <Route
           path="/"
           element={

@@ -1,23 +1,34 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../config";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import LoginForm from "./LoginForm";
 
 const ADMIN_EMAIL = "szvbinjomin@gmail.com"; // Set your admin email here
 
 export default function ShulProfile({ user, displayName }) {
   const { pageId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [page, setPage] = useState(null);
   const [participants, setParticipants] = useState({});
   const [manualName, setManualName] = useState({});
   const isAdmin = user && user.email === ADMIN_EMAIL;
 
+  // Redirect to login if not logged in
+  useEffect(() => {
+    if (!user) {
+      navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
+    }
+  }, [user, navigate, location.pathname]);
+
   // Load participants from backend
   useEffect(() => {
+    if (!user) return;
     axios.get(`${API_URL}/participants`).then(res => {
       setParticipants(res.data);
     });
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!pageId) return;
@@ -36,7 +47,7 @@ export default function ShulProfile({ user, displayName }) {
     } else {
       await axios.post(`${API_URL}/register`, {
         minyanId,
-        user: { uid: user.uid, email: user.email, displayName } // Pass displayName
+        user: { uid: user.uid, email: user.email, displayName }
       });
     }
     const res = await axios.get(`${API_URL}/participants`);
@@ -65,6 +76,15 @@ export default function ShulProfile({ user, displayName }) {
     const res = await axios.get(`${API_URL}/participants`);
     setParticipants(res.data);
   };
+
+  if (!user) {
+    // Show only the login form, pass redirect info if needed
+    return (
+      <div className="mt-8 flex justify-center">
+        <LoginForm />
+      </div>
+    );
+  }
 
   if (!page) {
     return <div className="mt-8 text-center text-gray-500">Loading...</div>;
