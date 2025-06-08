@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const https = require('https');
@@ -238,9 +239,8 @@ app.get("/api/user-profiles", (req, res) => {
   res.json({ profiles: data.userProfiles || {} });
 });
 
-// Telegram bot configuration
-const TELEGRAM_BOT_TOKEN = "7979977822:AAERvpBKhz5d63g_CaGgOGOE9PhYjmI1SQA";
-const TELEGRAM_CHAT_ID = "1223643230"; // e.g. 123456789
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 async function sendTelegramMessage(text) {
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
