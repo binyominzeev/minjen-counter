@@ -244,6 +244,7 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 async function sendTelegramMessage(text) {
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+  console.warn(`Telegram bot token: ${TELEGRAM_BOT_TOKEN}, Telegram chat ID: ${TELEGRAM_CHAT_ID}`);
   await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
