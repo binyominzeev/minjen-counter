@@ -244,16 +244,31 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 async function sendTelegramMessage(text) {
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  console.warn(`Telegram bot token: ${TELEGRAM_BOT_TOKEN}, Telegram chat ID: ${TELEGRAM_CHAT_ID}`);
-  await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: TELEGRAM_CHAT_ID,
-      text,
-      parse_mode: "HTML"
-    })
-  });
+  //console.warn("Telegram URL:", url);
+  //console.warn("Telegram Chat ID:", TELEGRAM_CHAT_ID);
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text,
+        parse_mode: "HTML"
+      })
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.error("Telegram API error:", response.status, response.statusText, errorBody);
+    } else {
+      const data = await response.json();
+      if (!data.ok) {
+        console.error("Telegram API responded with error:", data);
+      }
+    }
+  } catch (err) {
+    console.error("Error sending Telegram message:", err);
+  }
 }
 
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
