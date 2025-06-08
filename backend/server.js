@@ -3,6 +3,7 @@ const cors = require("cors");
 const https = require('https');
 const fs = require("fs");
 const bodyParser = require("body-parser");
+//const fetch = require("node-fetch"); // or global fetch in Node 18+
 const app = express();
 const PORT = 5000;
 
@@ -90,7 +91,7 @@ app.get("/api/participants", (req, res) => {
 });
 
 // Register a user for a minyan
-app.post("/api/register", (req, res) => {
+app.post("/api/register", async (req, res) => {
   const { minyanId, user } = req.body;
   if (!minyanId || !user) return res.status(400).json({ error: "Missing data" });
 
@@ -103,25 +104,53 @@ app.post("/api/register", (req, res) => {
 
   // Check if user is already registered
   if (!data.participants[minyanId].some(u => u.uid === user.uid)) {
-    // Save user with displayName
     data.participants[minyanId].push({
       ...user,
       displayName
     });
     writeData(data);
+
+    // --- Telegram notification ---
+    const page = data.pages.find(p =>
+      p.minyanim.some(m => m.id === minyanId)
+    );
+    const minyan = page?.minyanim.find(m => m.id === minyanId);
+    const count = data.participants[minyanId].length;
+    const userName = displayName || user.email;
+    if (page && minyan) {
+      await sendTelegramMessage(
+        `✅ <b>Regisztráció</b>\n📄 <b>Oldal:</b> ${page.name}\n🕰️ <b>Minyan:</b> ${minyan.label}\n👤 <b>Felhasználó:</b> ${userName}\n👥 <b>Létszám:</b> ${count}`
+      );
+    }
+    // ---
   }
   res.json({ success: true, participants: data.participants[minyanId] });
 });
 
 // Unregister a user from a minyan
-app.post("/api/unregister", (req, res) => {
+app.post("/api/unregister", async (req, res) => {
   const { minyanId, user } = req.body;
   if (!minyanId || !user) return res.status(400).json({ error: "Missing data" });
 
   const data = readData();
   data.participants = data.participants || {};
+  const before = (data.participants[minyanId] || []).length; // <-- Add this line
   data.participants[minyanId] = (data.participants[minyanId] || []).filter(u => u.uid !== user.uid);
   writeData(data);
+
+  // --- Telegram notification ---
+  const page = data.pages.find(p =>
+    p.minyanim.some(m => m.id === minyanId)
+  );
+  const minyan = page?.minyanim.find(m => m.id === minyanId);
+  const count = data.participants[minyanId]?.length || 0;
+  const userName = getDisplayName(data, user) || user.email;
+  if (page && minyan && before > count) {
+    await sendTelegramMessage(
+      `❌ <b>Kijelentkezés</b>\n📄 <b>Oldal:</b> ${page.name}\n🕰️ <b>Minyan:</b> ${minyan.label}\n👤 <b>Felhasználó:</b> ${userName}\n👥 <b>Létszám:</b> ${count}`
+    );
+  }
+  // ---
   res.json({ success: true, participants: data.participants[minyanId] });
 });
 
@@ -155,6 +184,75 @@ app.get("/api/profile/:uid", (req, res) => {
 // Update registration to use displayName if available:
 function getDisplayName(data, user) {
   return (data.userProfiles && data.userProfiles[user.uid]) || user.email;
+}
+
+// Update a page name
+app.put("/api/pages/:id", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  if (!name) return res.status(400).json({ error: "Missing name" });
+  const data = readData();
+  const page = data.pages.find(p => p.id === id);
+  if (!page) return res.status(404).json({ error: "Page not found" });
+  page.name = name;
+  writeData(data);
+  res.json({ success: true, page });
+});
+
+// Update a minyan label
+app.put("/api/pages/:pageId/minyanim/:minyanId", (req, res) => {
+  const { pageId, minyanId } = req.params;
+  const { label } = req.body;
+  if (!label) return res.status(400).json({ error: "Missing label" });
+  const data = readData();
+  const page = data.pages.find(p => p.id === pageId);
+  if (!page) return res.status(404).json({ error: "Page not found" });
+  const minyan = (page.minyanim || []).find(m => m.id === minyanId);
+  if (!minyan) return res.status(404).json({ error: "Minyan not found" });
+  minyan.label = label;
+  writeData(data);
+  res.json({ success: true, minyan });
+});
+
+// New endpoint to get all users
+app.get("/api/users", (req, res) => {
+  const data = readData();
+  // Collect all unique users from participants and userProfiles
+  const usersMap = {};
+  Object.values(data.participants || {}).forEach(arr => {
+    arr.forEach(u => {
+      usersMap[u.uid] = { uid: u.uid, email: u.email };
+    });
+  });
+  Object.entries(data.userProfiles || {}).forEach(([uid, displayName]) => {
+    if (!usersMap[uid]) usersMap[uid] = { uid, email: "" };
+    usersMap[uid].displayName = displayName;
+  });
+  const users = Object.values(usersMap);
+  res.json({ users });
+});
+
+// New endpoint to get all user profiles
+app.get("/api/user-profiles", (req, res) => {
+  const data = readData();
+  res.json({ profiles: data.userProfiles || {} });
+});
+
+// Telegram bot configuration
+const TELEGRAM_BOT_TOKEN = "7979977822:AAERvpBKhz5d63g_CaGgOGOE9PhYjmI1SQA";
+const TELEGRAM_CHAT_ID = "1223643230"; // e.g. 123456789
+
+async function sendTelegramMessage(text) {
+  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+  await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text,
+      parse_mode: "HTML"
+    })
+  });
 }
 
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));

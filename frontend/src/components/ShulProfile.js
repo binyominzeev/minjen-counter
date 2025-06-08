@@ -13,6 +13,7 @@ export default function ShulProfile({ user, displayName, loading }) {
   const [page, setPage] = useState(null);
   const [participants, setParticipants] = useState({});
   const [manualName, setManualName] = useState({});
+  const [userProfiles, setUserProfiles] = useState({});
   const isAdmin = user && user.email === ADMIN_EMAIL;
 
   // Redirect to login if not logged in
@@ -27,6 +28,14 @@ export default function ShulProfile({ user, displayName, loading }) {
     if (!user) return;
     axios.get(`${API_URL}/participants`).then(res => {
       setParticipants(res.data);
+    });
+  }, [user]);
+
+  // Load user profiles
+  useEffect(() => {
+    if (!user) return;
+    axios.get(`${API_URL}/user-profiles`).then(res => {
+      setUserProfiles(res.data.profiles || {});
     });
   }, [user]);
 
@@ -162,7 +171,7 @@ export default function ShulProfile({ user, displayName, loading }) {
                       >
                         <span>
                           <span className="font-bold mr-2">{idx + 1}.</span>
-                          {u.displayName || u.email}
+                          {userProfiles[u.uid] || u.email}
                         </span>
                         {isAdmin && (
                           <button
